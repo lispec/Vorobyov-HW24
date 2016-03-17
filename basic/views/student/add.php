@@ -11,10 +11,10 @@ use yii\helpers\Html;
 
 $form = ActiveForm::begin();
 
-echo $form->field($model, 'firstNameTeacher');
-echo $form->field($model, 'lastNameTeacher');
-echo $form->field($model, 'position');
-echo $form->field($model, 'emailTeacher');
+echo $form->field($teacher, 'firstName');
+echo $form->field($teacher, 'lastName');
+echo $form->field($teacher, 'position');
+echo $form->field($teacher, 'email');
 
 echo Html::submitButton('Submit', ['btn btn-primary']);
 

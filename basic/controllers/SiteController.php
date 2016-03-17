@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
 
 class SiteController extends Controller
 {
@@ -77,6 +78,7 @@ class SiteController extends Controller
 
     public function actionContact()
     {
+        //Yii::$app->session->addFlash('contactFormSubmitted', 'HELLO!');
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -102,19 +104,89 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionFoo(){
-//        echo 'Hello';
-//        return $this->render();
+    //для добавления в БД
+    public function actionAdd() {
+        //User::findOne([...])
+        //User::findAll([...])
 
-        $model = new Comment();
+        $user = new User();
 
-//        if($model->load(Yii::$app->request->post()) && $model->validate()){
-//            var_dump($model->name);
-//            die;
-//        }
+//        $user->createdAt = date('Y-m-d H:i:s');
+        $user->updatedAt = date('Y-m-d H:i:s');
 
-        return $this->render('about', [
-            'model' => $model,
+        if($user->load(Yii::$app->request->post()) && $user->validate()) {
+
+
+            $user->save();
+            ///$user->passwordHash = '';
+        }
+
+        return $this->render('add', [
+            'model' => $user,
         ]);
     }
+
+    public function actionFoo() {
+
+//        $users = User::findAll([
+//            'authKey' => null,
+//            'firstName' => 'Vasia'
+//        ]);
+
+        $user = User::find()->where(['firstName' => 'Vasia'])->one();
+
+        var_dump($user);
+
+        //$user->email = 'hohohohoh@fsdfdsf.ccc';
+        //echo $user->email;
+        $user = new User();
+        $user->email = 'sadsadsad@asdasd.ccc';
+        $user->firstName = 'sadasdasd';
+        $user->lastName = "dsfsdfdsf";
+        $user->passwordHash = 'sadsad';
+        $user->createdAt = date('Y-m-d H:i:s');
+        $user->updatedAt = date('Y-m-d H:i:s');
+
+        var_dump($user);
+
+        $user->save(false);     // сохранить без валидации
+
+        echo "Hello";
+
+        //$user->save(false);
+
+        die;
+
+
+        //var_dump($user);
+        //die;
+
+        //var_dump($users);
+        //die;
+        //throw new \Exception('sadhasudhsad')
+
+        //return $foo;
+
+        return $this->render('foo');
+        //return 'Hello';
+    }
+
+
+//    public function actionRegister(){
+//
+//        // 2 способ
+//        $model - new User([
+//            'scenario'=>'register'
+//        ]);
+//        // 1 способ
+//        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+//            return
+//
+//                $model->save();
+//            ///$user->passwordHash = '';
+//        }
+//    }
+
+
+
 }

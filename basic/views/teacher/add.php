@@ -12,10 +12,10 @@ $form = ActiveForm::begin([
     'enableClientValidation' => false,
 ]);
 
-echo $form->field($model, 'firstNameStudent');
-echo $form->field($model, 'lastNameStudent');
-echo $form->field($model, 'group');
-echo $form->field($model, 'emailStudent');
+echo $form->field($student, 'firstName');
+echo $form->field($student, 'lastName');
+echo $form->field($student, 'group');
+echo $form->field($student, 'email');
 
 echo Html::submitButton('Submit', ['class' => 'btn btn-primary']);
 

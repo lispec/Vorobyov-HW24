@@ -11,13 +11,21 @@ class TeacherController extends Controller
 {
     public function actionAdd()
     {
-        $model = new TStudentForm();
+        $student = new TStudentForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            return $this->render('entry-confirm', ['model' => $model]);
+        if ($student->load(Yii::$app->request->post()) && $student->validate()) {
+
+            $student->createdAt = date('Y-m-d H:i:s');
+            $student->updatedAt = date('Y-m-d H:i:s');
+            $student->save(false);
+
+            return $this->render('entry-confirm', [
+                'student' => $student
+            ]);
+
         } else {
             return $this->render('add', [
-                'model' => $model
+                'student' => $student
             ]);
         }
     }

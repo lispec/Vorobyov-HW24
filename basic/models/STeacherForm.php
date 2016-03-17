@@ -3,32 +3,36 @@
 namespace app\models;
 
 use yii\base\Model;
+use yii\db\ActiveRecord;
 
-class STeacherForm extends Model
+//class STeacherForm extends Model
+
+
+class STeacherForm extends ActiveRecord
 {
 
-    public $firstNameTeacher;
-    public $lastNameTeacher;
-    public $position;
-    public $emailTeacher;
+    public static function tableName(){
+        return 'steacher';
+    }
 
     public function rules()
     {
         return [
-            ['firstNameTeacher', 'required'],
-            ['lastNameTeacher', 'required'],
+            ['firstName', 'required'],
+            ['lastName', 'required'],
             ['position', 'required'],
-            ['emailTeacher', 'required'],
+            ['email', 'email'],
+            ['email', 'required'],
         ];
     }
 
     public function attributeLabels()
     {
         return [
-            'firstNameTeacher' => 'Ваше имя',
-            'lastNameTeacher' => 'Ваша фамилия',
+            'firstName' => 'Ваше имя',
+            'lastName' => 'Ваша фамилия',
             'position' => 'Ваша должность',
-            'emailTeacher' => 'Ваш email',
+            'email' => 'Ваш email',
         ];
 
     }
