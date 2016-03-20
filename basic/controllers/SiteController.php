@@ -11,6 +11,8 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
 
+use yii\base\Model;
+
 class SiteController extends Controller
 {
     public function behaviors()
@@ -51,8 +53,41 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+
+        //var_dump(Yii::$app->user->identity->email);
+        //die;
+
+        if (Yii::$app->user->isGuest) {
+            return $this->render('foo');
+        }
+
+        //Yii::$app->user->log
+
+//        if(Yii::$app->request->cookies->get('notGuest')) {
+//            return $this->render('sajdsajdkas');
+//        } else {
+//            return $this->render('asdsadasd');
+//        }
+
+
+//        $model = new User([
+//            'scenario' => 'safe',
+//            'attributes' => [
+//                'firstName' => 'fff',
+//                'lastName' => 'ddd',
+//                'email' => 'asdasdasdsa@saddsad.ccc',
+//                'passwordHash' => 'sddasdsada',
+//            ],
+//        ]);
+//
+//        $model->save();
+//
+//        $model->firstName = 'Vasia';
+//        $model->save();
+
         return $this->render('index');
     }
+
 
     public function actionLogin()
     {
@@ -60,7 +95,10 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new User([
+            'scenario'=>'login'
+        ]);
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
@@ -94,7 +132,7 @@ class SiteController extends Controller
     {
         $model = new Comment();
 
-        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             var_dump($model->name);
             die;
         }
@@ -105,7 +143,8 @@ class SiteController extends Controller
     }
 
     //для добавления в БД
-    public function actionAdd() {
+    public function actionAdd()
+    {
         //User::findOne([...])
         //User::findAll([...])
 
@@ -114,7 +153,7 @@ class SiteController extends Controller
 //        $user->createdAt = date('Y-m-d H:i:s');
         $user->updatedAt = date('Y-m-d H:i:s');
 
-        if($user->load(Yii::$app->request->post()) && $user->validate()) {
+        if ($user->load(Yii::$app->request->post()) && $user->validate()) {
 
 
             $user->save();
@@ -126,7 +165,8 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionFoo() {
+    public function actionFoo()
+    {
 
 //        $users = User::findAll([
 //            'authKey' => null,
@@ -172,21 +212,32 @@ class SiteController extends Controller
     }
 
 
-//    public function actionRegister(){
+    public function actionRegister()
+    {
 //
-//        // 2 способ
-//        $model - new User([
-//            'scenario'=>'register'
-//        ]);
-//        // 1 способ
-//        if($model->load(Yii::$app->request->post()) && $model->validate()) {
-//            return
-//
-//                $model->save();
-//            ///$user->passwordHash = '';
-//        }
-//    }
+//        // 2 СПОСОБ
+//        $model = new User();
+//        $model->setScenario('register');
+        // но лучше это за один шаг сделать
 
+        $model = new User([
+//            'scenario' => 'register'
+            'scenario' => 'login'
+        ]);
+
+//        $model = new User();
+
+        //проверка post и если все ок то логиним
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->user->login($model, 60 * 60 * 24 * 30);
+            return $this->goHome();
+        }
+
+        //вывод формы регистрации
+        return $this->render('register', [
+            'model' => $model,
+        ]);
+    }
 
 
 }

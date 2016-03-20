@@ -6,6 +6,14 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+
+    //[МАРШРУТИЗАЦИЯ] Вставка маршрута по умолчанию, вместо того который сразу был перекидывал нас на Home
+//    'defaultRoute' => 'site/login',
+
+    //[МАРШРУТИЗАЦИЯ] Заглушка если сайт находитсья на реконструкции
+//    'catchAll' => ['\'/site/register\''],
+
+
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -38,18 +46,24 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            //'dashboard' => 'main/index',
             'rules' => [
+                // [МАРШРУТИЗАЦИЯ] тут пишем правила  для задания собственных маршрутов
+                '/register' => '/site/register',
+                // раньше писали site/show/id=1 а сейчас через регулярку
+                '/site/show/<id:\d+>' => '/site/show',
+                '/id<id:\d+>' => '/site/show'
             ],
         ],
-        
+
     ],
     'params' => $params,
 ];
 
+//этот блок для отображения вверху имени пользователя вроде, и его можно потом закоммитить
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
     $config['bootstrap'][] = 'debug';
