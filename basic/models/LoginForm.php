@@ -52,12 +52,20 @@ class LoginForm extends Model
 //            }
 //        }
 
-        $user = User::findOne(['email' => $this->email]);
-        if (Yii::$app->security->validatePassword($this->password, $user->passwordHash)) {
-            return true;
-        } else {
-            $this->addError($attribute, 'Incorrent username or password');
-        }
+//        $user = User::findOne(['email' => $this->email]);
+//        if (Yii::$app->security->validatePassword($this->password, $user->passwordHash)) {
+//            return true;
+//        } else {
+//            $this->addError($attribute, 'Incorrent username or password');
+//        }
+
+        if ($user = User::findOne(['email' => $this->email])) {
+            if (Yii::$app->security->validatePassword($this->password, $user->passwordHash)) {
+                return true;
+            } else {
+                $this->addError($attribute, 'Incorrent username or password');
+            }
+
 //        if (!$this->hasErrors()) {
 //            $user = $this->getUser();
 //
@@ -65,32 +73,34 @@ class LoginForm extends Model
 //                $this->addError($attribute, 'Incorrect username or password.');
 //            }
 //        }
-    }
-
-    /**
-     * Logs in a user using the provided username and password.
-     * @return boolean whether the user is logged in successfully
-     */
-    public function login()
-    {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         }
-        return false;
-    }
 
-    /**
-     * Finds user by [[username]]
-     *
-     * @return User|null
-     */
-    public function getUser()
-    {
+        /**
+         * Logs in a user using the provided username and password.
+         * @return boolean whether the user is logged in successfully
+         */
+        public
+        function login()
+        {
+            if ($this->validate()) {
+                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            }
+            return false;
+        }
+
+        /**
+         * Finds user by [[username]]
+         *
+         * @return User|null
+         */
+        public
+        function getUser()
+        {
 //        if ($this->_user === false) {
 //            $this->_user = User::findByUsername($this->username);
-        return User::findOne(['email' => $this->email]);
+            return User::findOne(['email' => $this->email]);
 //        }
 
 //        return $this->_user;
+        }
     }
-}

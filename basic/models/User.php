@@ -2,12 +2,28 @@
 
 namespace app\models;
 
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\web\HttpException;
 use yii\web\IdentityInterface;
 
 use Yii;
 use yii\base\Model;
+
+
+// класс для создания его в action-е в контроллере - для вызова метода и в нем чтобы применялось много запросов
+// (также для вызова notAssigned() надо в class User пееопределить метод find() иначе он будет работать по умочанию)
+class UserQuery extends ActiveQuery
+{
+    /**
+     * @return $this
+     */
+    public function notAssigned()
+    {
+        return $this->andWhere(['schoolId' => null])
+            ->orderBy('id DESC');
+    }
+}
 
 /**
  * This is the model class for table "user".
@@ -20,6 +36,9 @@ use yii\base\Model;
  * @property string $createdAt
  * @property string $updatedAt
  * @property string $authKey
+ *
+ * @property School $school
+ * @property Course [] $courses
  */
 //class User extends ActiveRecord {
 class User extends ActiveRecord implements IdentityInterface
@@ -27,6 +46,17 @@ class User extends ActiveRecord implements IdentityInterface
 
     public $passwordConfirm;
     public $rememberMe = true;
+    public $avatar;
+
+    /**
+     * @return UserQuery
+     */
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
+    }
+
+
 
 
 //    public $sex;        // выбор пола при регистрации
@@ -51,7 +81,6 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return false;
     }
-
 
 
     public static function findIdentity($id)
@@ -92,6 +121,13 @@ class User extends ActiveRecord implements IdentityInterface
 //            ['email', 'unique', 'on' => 'register'],
 //            //['sex', 'in', 'range' => ['male', 'female'], 'on' => 'register'],
 
+            // Миша правила 28 урок
+            [['firstName', 'lastName', 'schoolId'], 'required', 'on' => 'edit'],
+            ['schoolId', 'exist', 'targetClass' => School::className(), 'targetAttribute' => 'id', 'on' => 'edit'],
+            ['avatar', 'file', 'minSize' => 1024, 'on' => 'edit'],
+
+
+            // мои правила
             ['email', 'required', 'on' => 'login'],
             ['email', 'email', 'on' => 'login'],
             ['passwordHash', 'required', 'on' => 'login'],
@@ -109,6 +145,17 @@ class User extends ActiveRecord implements IdentityInterface
 
         return parent::beforeSave($insert);
     }
+
+    public function getSchool()
+    {
+        return $this->hasOne(School::className(), ['id' => 'schoolId']);
+    }
+
+    public function getCourses()
+    {
+        return $this->hasMany(Course::className(), ['id' => 'courseId'])->viaTable('userCourse', ['userId' => 'id']);
+    }
+
 
     public static function tableName()
     {

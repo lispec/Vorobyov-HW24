@@ -27,10 +27,13 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+//        'brandLabel' => 'My Company',
+        'brandLabel' => 'My Hello',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+//            'class' => 'navbar-inverse navbar-fixed-top',
+            // поставили светлую минюху вместо темной
+            'class' => 'navbar-default navbar-fixed-top',
         ],
     ]);
     echo Nav::widget([
@@ -38,12 +41,20 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
+
+            // добавили новые лэйблы свои
+            ['label' => 'Add School', 'url' => ['/school/add'], 'visible' => !Yii::$app->user->isGuest],
+            ['label' => 'Schools', 'url' => ['/school/list'], 'visible' => !Yii::$app->user->isGuest],
+
             ['label' => 'Contact', 'url' => ['/site/contact']],
             ['label' => 'Foo', 'url' => ['site/foo']],
             ['label' => 'Teacher', 'url' => ['teacher/add']],
             ['label' => 'Student', 'url' => ['student/add']],
+            ['label' => 'Register', 'url' => ['site/register']],
+
+
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+            ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
@@ -70,7 +81,10 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+<!--        <p class="pull-left">&copy; My Company --><?//= date('Y') ?><!--</p>-->
+        <p class="pull-left">&copy; Hello World <?= date('Y') ?></p>
+
+
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

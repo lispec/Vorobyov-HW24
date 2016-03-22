@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+
 use app\models\Comment;
+use app\models\School;
 use Yii;
+use yii\db\Expression;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -13,30 +16,86 @@ use app\models\User;
 
 use yii\base\Model;
 
+
 class SiteController extends Controller
 {
-    public function behaviors()
+//    public function behaviors()
+//    {
+    // 1 стартовый вариант
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'only' => ['logout'],
+//                'rules' => [
+//                    [
+//                        'actions' => ['logout'],
+//                        'allow' => true,
+//                        'roles' => ['@'],
+//                    ],
+//                ],
+//            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'logout' => ['post'],
+//                ],
+//            ],
+//        ];
+//        }
+
+
+    // Мишин вариант
+//    public function behaviors()
+//    {
+//        return [
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'only' => ['bar'],
+//                'rules' => [
+//                    [
+//                        'actions' => ['index'],
+//                        'roles' => ['?'],
+//                        'allow' => true,
+//                    ],
+//                    [
+//                        'allow' => true,
+//                        'roles' => ['@'],
+//                    ],
+//                ],
+//            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'logout' => ['post'],
+//                    'foo' => ['post', 'delete']
+//                ],
+//            ],
+//        ];
+//    }
+
+
+    public function actionBar()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
-        ];
+
+        $user = new User();
+        $user = User::findOne(5);
+        $courses = $user->courses;
+        var_dump($courses);
+        die;
+
+        //        $user = User::findOne(5);
+        //        var_dump($user);
+        //        //$school = School::findOne($user->schoolId);
+        //
+        //        $school = $user->school;
+        //        var_dump($school);
+
+        $school = School::find()->one();
+        var_dump($school->users);
+        die;
+        return $this->render('foo');
     }
+
 
     public function actions()
     {
@@ -53,6 +112,17 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        //Yii::$app->request->cookies
+        //Yii::$app->user->isGuest
+        //Yii::$app->user->identity
+        //var_dump(User::find()->where(['REGEXP', 'email', 'asd*'])->all());
+
+        //User::find()->notAssigned
+
+        //var_dump(User::find()->notAssigned()->all());
+
+        User::find()->where(['id' => [1, 3, 4]])->notAssigned()->asArray()->all();
+        User::find()->where(['BETWEEN', 'id', 1, 10])->all();
 
         //var_dump(Yii::$app->user->identity->email);
         //die;
@@ -96,7 +166,7 @@ class SiteController extends Controller
         }
 
         $model = new User([
-            'scenario'=>'login'
+            'scenario' => 'login'
         ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
@@ -173,29 +243,27 @@ class SiteController extends Controller
 //            'firstName' => 'Vasia'
 //        ]);
 
-        $user = User::find()->where(['firstName' => 'Vasia'])->one();
+//        $user = User::find()->where(['firstName' => 'Vasia'])->one();
+//        var_dump($user);
+//
+//        //$user->email = 'hohohohoh@fsdfdsf.ccc';
+//        //echo $user->email;
+//        $user = new User();
+//        $user->email = 'sadsadsad@asdasd.ccc';
+//        $user->firstName = 'sadasdasd';
+//        $user->lastName = "dsfsdfdsf";
+//        $user->passwordHash = 'sadsad';
+//        $user->createdAt = date('Y-m-d H:i:s');
+//        $user->updatedAt = date('Y-m-d H:i:s');
+//        var_dump($user);
+//        $user->save(false);     // сохранить без валидации
+//        die;
 
-        var_dump($user);
 
-        //$user->email = 'hohohohoh@fsdfdsf.ccc';
-        //echo $user->email;
-        $user = new User();
-        $user->email = 'sadsadsad@asdasd.ccc';
-        $user->firstName = 'sadasdasd';
-        $user->lastName = "dsfsdfdsf";
-        $user->passwordHash = 'sadsad';
-        $user->createdAt = date('Y-m-d H:i:s');
-        $user->updatedAt = date('Y-m-d H:i:s');
-
-        var_dump($user);
-
-        $user->save(false);     // сохранить без валидации
-
-        echo "Hello";
 
         //$user->save(false);
 
-        die;
+//        die;
 
 
         //var_dump($user);

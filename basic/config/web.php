@@ -55,7 +55,9 @@ $config = [
                 '/register' => '/site/register',
                 // раньше писали site/show/id=1 а сейчас через регулярку
                 '/site/show/<id:\d+>' => '/site/show',
-                '/id<id:\d+>' => '/site/show'
+//                '/id<id:\d+>' => '/site/show'
+                '/id<id:\d+>' => '/site/show',
+                '/school/edit/<id:\d+>' => '/school/edit'
             ],
         ],
 
