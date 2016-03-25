@@ -112,19 +112,19 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
 //            [['firstName', 'lastName', 'email', 'passwordHash', 'createdAt', 'updatedAt'], 'safe', 'on' => 'safe'],
-//            [['firstName', 'lastName', 'email', 'passwordHash', 'passwordConfirm'], 'required', 'on' => ['register',]],
+            [['firstName', 'lastName', 'email', 'passwordHash', 'passwordConfirm'], 'required', 'on' => ['register',]],
 //            ['email', 'required', 'on' => ['login']],
 //            ['email', 'email', 'on' => ['login']],
 ////            ['password', 'required', 'on'=>'login'],
-//            ['passwordHash', 'string', 'min' => 3, 'on' => 'register'],
-//            ['passwordConfirm', 'compare', 'compareAttribute' => 'passwordHash', 'on' => 'register', 'message' => 'Пароли не совпадают!'],
-//            ['email', 'unique', 'on' => 'register'],
+            ['passwordHash', 'string', 'min' => 3, 'on' => 'register'],
+            ['passwordConfirm', 'compare', 'compareAttribute' => 'passwordHash', 'on' => 'register', 'message' => 'Пароли не совпадают!'],
+            ['email', 'unique', 'on' => 'register'],
 //            //['sex', 'in', 'range' => ['male', 'female'], 'on' => 'register'],
 
             // Миша правила 28 урок
             [['firstName', 'lastName', 'schoolId'], 'required', 'on' => 'edit'],
             ['schoolId', 'exist', 'targetClass' => School::className(), 'targetAttribute' => 'id', 'on' => 'edit'],
-            ['avatar', 'file', 'minSize' => 1024, 'on' => 'edit'],
+            ['avatar', 'file', 'on' => 'edit'],
 
 
             // мои правила
@@ -165,7 +165,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'passwordHash' => 'Password'
+            'firstName' => 'First Name',
+            'lastName' => 'Last Name',
+            'email' => 'Email',
+            'passwordHash' => 'Password',
 
         ];
     }

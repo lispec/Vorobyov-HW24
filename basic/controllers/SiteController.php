@@ -289,8 +289,8 @@ class SiteController extends Controller
         // но лучше это за один шаг сделать
 
         $model = new User([
-//            'scenario' => 'register'
-            'scenario' => 'login'
+            'scenario' => 'register'
+//            'scenario' => 'login'
         ]);
 
 //        $model = new User();

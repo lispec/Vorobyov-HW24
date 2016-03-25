@@ -11,3 +11,4 @@ echo $form->field($model, 'lastName');
 echo $form->field($model, 'avatar')->input('file');
 echo $form->field($model, 'schoolId')->dropDownList($schools);
 echo \yii\helpers\Html::submitButton();
+

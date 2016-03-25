@@ -41,6 +41,8 @@ AppAsset::register($this);
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
+            ['label' => 'User', 'url' => ['/user/list']],
+//            ['label' => 'User Edit', 'url' => ['/user/edit']],
 
             // добавили новые лэйблы свои
             ['label' => 'Add School', 'url' => ['/school/add'], 'visible' => !Yii::$app->user->isGuest],
