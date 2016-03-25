@@ -14,6 +14,8 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\User;
 
+use ReCaptcha\ReCaptcha;    // [КАПЧА]
+
 use yii\base\Model;
 
 
@@ -177,6 +179,10 @@ class SiteController extends Controller
         ]);
     }
 
+
+    /**
+     * @return \yii\web\Response
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -260,7 +266,6 @@ class SiteController extends Controller
 //        die;
 
 
-
         //$user->save(false);
 
 //        die;
@@ -282,6 +287,8 @@ class SiteController extends Controller
 
     public function actionRegister()
     {
+        //TODO: fix this issue
+        //hello
 //
 //        // 2 СПОСОБ
 //        $model = new User();
@@ -296,14 +303,58 @@ class SiteController extends Controller
 //        $model = new User();
 
         //проверка post и если все ок то логиним
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->user->login($model, 60 * 60 * 24 * 30);
-            return $this->goHome();
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            Yii::$app->user->login($model, 60 * 60 * 24 * 30);
+//            return $this->goHome();
+//        }
+        //check captcha
+
+
+        if ($model->load(Yii::$app->request->post())) {
+            //g-recaptcha-response
+            if ($resp = Yii::$app->request->post('g-recaptcha-response')) {
+
+                $recapt = new ReCaptcha(Yii::$app->params['recaptcha']['secret']);
+                $r = $recapt->verify($resp);
+                if ($r->isSuccess()) {
+                    //die('succcess!!!!');
+
+                    if ($model->save()) {
+                        Yii::$app->user->login($model, 60 * 60 * 24 * 30);
+
+                        Yii::$app->mailer->compose('welcome')
+                            ->setFrom('bolsunovskiy@gmail.com')
+                            ->setTo($model->email)
+                            ->setSubject('Hello, Dear')
+                            ->send();
+
+                        return $this->goHome();
+                    }
+                } else {
+                    $model->addError('email', 'go away!');
+                }
+
+//                $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+//                curl_setopt($ch, CURLOPT_POST, true);
+//                curl_setopt($ch, CURLOPT_POSTFIELDS, [
+//                    'secret' => Yii::$app->params['recaptcha']['secret'],
+//                    'response' => $resp,
+//                ]);
+//                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//                if($ret = curl_exec($ch)) {
+                //var_dump($ret);
+                //die;
+
+//                }
+            } else {
+                $model->addError('email', 'You are bot!');
+            }
         }
 
         //вывод формы регистрации
         return $this->render('register', [
             'model' => $model,
+            'siteKey' => Yii::$app->params['recaptcha']['key']
         ]);
     }
 

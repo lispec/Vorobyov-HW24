@@ -16,6 +16,8 @@ class School extends ActiveRecord
     {
         return [
             ['name', 'required', 'on' => ['add', 'edit']],
+                        ['name', 'required', 'on' => ['add', 'edit',]],
+                        ['name', 'safe', 'on' => 'search']
         ];
     }
 
