@@ -1,5 +1,5 @@
 <!--подключвем скрипт-->
-<script src='https://www.google.com/recaptcha/api.js'></script>
+<!--<script src='https://www.google.com/recaptcha/api.js'></script>-->
 
 
 <?php
@@ -15,7 +15,7 @@ echo $form->field($model, 'email');
 echo $form->field($model, 'passwordHash')->input('password');
 echo $form->field($model, 'passwordConfirm')->input('password');
 ?>
-<div class="g-recaptcha" data-sitekey="<?php echo $siteKey ?>"></div>
+<!--<div class="g-recaptcha" data-sitekey="--><?php //echo $siteKey ?><!--"></div>-->
 
 <?php
 //echo $form->field($model, 'sex')->dropDownList(['male' => 'Мужчина', 'female' => 'Женщина', 'оnо' => 'ono']);

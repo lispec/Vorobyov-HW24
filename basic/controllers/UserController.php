@@ -72,15 +72,52 @@ class UserController extends Controller
 
     public function actionList()
     {
+
+//        $provider = new ActiveDataProvider([
+//            'query' => User::find(),
+//            'pagination' => [
+//                'pageSize' => 5,
+//            ],
+//        ]);
+//
+//        return $this->render('list', [
+//            'provider' => $provider,
+//        ]);
+
+
+        //4. Сделать поиск по пользователям, по firstName, email, lastName
+
+        // 1) создаем переменную с информацией из таблице
+        $query = User::find();
+
+        // 2) создаем модель
+        $filterModel = new User([
+            'scenario' => 'search'
+        ]);
+
+        // 3) обработка формы
+        if ($filterModel->load(\Yii::$app->request->get()) && $filterModel->validate()) {
+            if (!empty($filterModel->firstName)) {
+                $query->andWhere(['like', 'firstName', $filterModel->firstName]);
+            } elseif (!empty($filterModel->lastName)) {
+                $query->andWhere(['like', 'lastName', $filterModel->lastName]);
+            } elseif (!empty($filterModel->email)) {
+                $query->andWhere(['like', 'email', $filterModel->email]);
+            }
+        }
+
+        // 4) объект ActiveDataProvider
         $provider = new ActiveDataProvider([
-            'query' => User::find(),
+            'query' => $query,
             'pagination' => [
                 'pageSize' => 5,
             ],
         ]);
 
+        // 5) render
         return $this->render('list', [
             'provider' => $provider,
+            'filterModel' => $filterModel,
         ]);
     }
 

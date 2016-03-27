@@ -131,6 +131,11 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'required', 'on' => 'login'],
             ['email', 'email', 'on' => 'login'],
             ['passwordHash', 'required', 'on' => 'login'],
+
+            // мои правила 29 дз
+
+            [['email', 'firstName', 'lastName'], 'safe', 'on' => 'search']
+//            ['email', 'safe', 'on' => 'search']
         ];
     }
 

@@ -4,6 +4,7 @@
 
 echo \yii\grid\GridView::widget([
     'dataProvider' => $provider,
+    'filterModel' => $filterModel,
     'columns' => [
         'id',
         'firstName' => [

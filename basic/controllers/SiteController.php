@@ -312,27 +312,27 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             //g-recaptcha-response
-            if ($resp = Yii::$app->request->post('g-recaptcha-response')) {
-
-                $recapt = new ReCaptcha(Yii::$app->params['recaptcha']['secret']);
-                $r = $recapt->verify($resp);
-                if ($r->isSuccess()) {
+//            if ($resp = Yii::$app->request->post('g-recaptcha-response')) {
+//
+//                $recapt = new ReCaptcha(Yii::$app->params['recaptcha']['secret']);
+//                $r = $recapt->verify($resp);
+//                if ($r->isSuccess()) {
                     //die('succcess!!!!');
 
                     if ($model->save()) {
                         Yii::$app->user->login($model, 60 * 60 * 24 * 30);
 
                         Yii::$app->mailer->compose('welcome')
-                            ->setFrom('bolsunovskiy@gmail.com')
+                            ->setFrom('master.vorobey@gmail.com')
                             ->setTo($model->email)
                             ->setSubject('Hello, Dear')
                             ->send();
 
                         return $this->goHome();
                     }
-                } else {
-                    $model->addError('email', 'go away!');
-                }
+//                } else {
+//                    $model->addError('email', 'go away!');
+//                }
 
 //                $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
 //                curl_setopt($ch, CURLOPT_POST, true);
@@ -346,9 +346,9 @@ class SiteController extends Controller
                 //die;
 
 //                }
-            } else {
-                $model->addError('email', 'You are bot!');
-            }
+//            } else {
+//                $model->addError('email', 'You are bot!');
+//            }
         }
 
         //вывод формы регистрации
